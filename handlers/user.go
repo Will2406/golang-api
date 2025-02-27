@@ -76,6 +76,7 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 		}
 		user, err := repository.GetUserByEmail(r.Context(), request.Email)
 		if err != nil {
+
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -94,7 +95,8 @@ func LoginHandler(s server.Server) http.HandlerFunc {
 				ExpiresAt: time.Now().Add(48 * time.Hour).Unix(),
 			},
 		}
-		token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 		tokenString, err := token.SignedString([]byte(s.Config().JWTSecret))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
