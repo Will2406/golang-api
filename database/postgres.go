@@ -48,7 +48,7 @@ func (repo *PostgresRepository) GetUserById(ctx context.Context, id string) (*mo
 	return &user, err
 }
 
-func (repo *PostgresRepository) getUserByEmail(ctx context.Context, email string) (*models.User, error) {
+func (repo *PostgresRepository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id,email,password FROM users WHERE email = $1 ", email)
 
 	defer func() {
