@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"golang-api/models"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 type PostgresRepository struct {
@@ -20,11 +22,11 @@ func NewPostgresRepository(url string) (*PostgresRepository, error) {
 }
 
 func (repo *PostgresRepository) InsertUser(ctx context.Context, user *models.User) error {
-	_, err := repo.db.ExecContext(ctx, "INSERT INTO users (email,password) VALUES ($1,$2)", user.Email, user.Password)
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO users (id,email,password) VALUES ($1,$2,$3)", user.Id, user.Email, user.Password)
 	return err
 }
 
-func (repo *PostgresRepository) GetUserById(ctx context.Context, id int64) (*models.User, error) {
+func (repo *PostgresRepository) GetUserById(ctx context.Context, id string) (*models.User, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id,email FROM users WHERE id = $1 ", id)
 
 	defer func() {
