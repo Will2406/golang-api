@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"golang-api/handlers"
+	"golang-api/middleware"
 	"golang-api/server"
 	"log"
 	"net/http"
@@ -40,7 +41,9 @@ func main() {
 }
 
 func BindRoutes(s server.Server, router *mux.Router) {
+	router.Use(middleware.CheckAuthMiddleware(s))
 	router.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
 	router.HandleFunc("/signup", handlers.SignUpHanlder(s)).Methods(http.MethodPost)
 	router.HandleFunc("/login", handlers.LoginHandler(s)).Methods(http.MethodPost)
+	router.HandleFunc("/me", handlers.MeHandler(s)).Methods(http.MethodGet)
 }
